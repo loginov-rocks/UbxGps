@@ -1,1 +1,1 @@
-# Arduino-GPS-10-Hz-to-GMaps
+# Arduino GPS 10 Hz to Google Maps
