@@ -1,20 +1,16 @@
 /**
+ * UBX GPS Library
+ * Created by Danila Loginov, July 23, 2016
+ * https://github.com/1oginov/UBX-GPS-Library
  *
- * Arduino GPS 10 Hz to GMaps
- * https://github.com/1oginov/Arduino-GPS-10-Hz-to-GMaps
- *
- * Sketch for communication between the PC and any other device
- * through Arduino Uno. With U-blox NEO-7M in this case.
- *
- * Скетч для общения между компьютером и любым другим устройством
- * через Arduino Uno. В данном примере - с U-blox NEO-7M.
+ * Sketch for communication between PC and any other device through Arduino Uno. With U-blox NEO-7M in this case.
+ * Скетч для общения между компьютером и любым другим устройством через Arduino Uno. В данном примере - с U-blox NEO-7M.
  *
  * U-blox NEO-7M - Arduino Uno
  * VCC - 5V
  * RX - 3
  * TX - 2
  * GND - GND
- *
  */
 
 #define PC_BAUDRATE   9600
@@ -37,8 +33,8 @@
 SoftwareSerial ss(GPS_TX, GPS_RX);
 
 void setup() {
-  Serial.begin(PC_BAUDRATE);
-  ss.begin(GPS_BAUDRATE);
+    Serial.begin(PC_BAUDRATE);
+    ss.begin(GPS_BAUDRATE);
 }
 
 /**
@@ -47,13 +43,12 @@ void setup() {
  */
 void loop() {
 
-  if (ss.available()) {
-    Serial.write(ss.read());
-  }
+    if (ss.available()) {
+        Serial.write(ss.read());
+    }
 
-  if (Serial.available()) {
-    ss.write(Serial.read());
-  }
+    if (Serial.available()) {
+        ss.write(Serial.read());
+    }
 
 }
-
