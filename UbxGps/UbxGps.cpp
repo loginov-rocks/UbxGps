@@ -35,7 +35,7 @@ void UbxGps::calculateChecksum() {
 }
 
 boolean UbxGps::ready() {
-    unsigned short p = this->carriagePosition;
+    unsigned char p = this->carriagePosition;
 
     while (this->available()) {
         byte c = this->read();
