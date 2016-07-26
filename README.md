@@ -61,13 +61,13 @@ Because of Uno has only one TX/RX pair we should connect GPS module's `TX` to th
 
 Let's make a bridge between GPS module and computer: upload `Serial-Bridge-Uno.ino` or `Serial-Bridge-Mega.ino` sketch on the board, it allows us to communicate with GPS module directly from computer. Open _Serial Monitor_, and if your GPS module is new or have default settings you will see something like on the picture below. If everything is OK, GPS will send some data.
 
-![Serial bridge](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%202.%20Serial%20bridge.gif)
+![Serial bridge](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%202.%20Serial%20bridge.jpg)
 
 ### Step 3. Meet u-center
 
 For u-blox GPS module configuration we will use **u-center** program that you can find [here](https://www.u-blox.com/en/product/u-center-windows). It parses data from GPS module and provides useful tools to work with it. Launch program, choose appropriate COM port and set baudrate, 9600 for default. It will start getting some data.
 
-![Meet u-center](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%203.%20Meet%20u-center.gif)
+![Meet u-center](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%203.%20Meet%20u-center.jpg)
 
 ### Step 4. Change baudrate (if you want)
 
@@ -111,7 +111,7 @@ Go to _UBX — CFG — CFG_ and click _Send_ to save current configuration.
 
 Close u-center and open an example `NavPvt` sketch, check baudrate and upload it to the board. If everything is OK you’ll get desired data. **That’s all Folks!**
 
-![Checks](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%209.%20Checks.gif)
+![Checks](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%209.%20Checks.jpg)
 
 More details about u-blox GPS module configuration you can find in _**Receiver Description** — Receiver Configuration_ in the `Docs` directory.
 
