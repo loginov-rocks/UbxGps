@@ -12,7 +12,7 @@
 class UbxGpsNavPosllh : public UbxGps {
 public:
 
-    //        Type  Name           Unit   Descrption (scaling)
+    //        Type  Name           Unit   Description (scaling)
     unsigned  long  iTOW;       // ms     GPS time of week of the navigation epoch. See the description of iTOW for details.
     long            lon;        // deg    Longitude (1e-7)
     long            lat;        // deg    Latitude (1e-7)

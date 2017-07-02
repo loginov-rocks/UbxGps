@@ -12,7 +12,7 @@
 class UbxGpsNavSol : public UbxGps {
 public:
 
-    //        Type  Name           Unit   Descrption (scaling)
+    //        Type  Name           Unit   Description (scaling)
     unsigned  long  iTOW;       // ms     GPS time of week of the navigation epoch. See the description of iTOW for details.
     long            fTOW;       // ns     Fractional part of iTOW (range: +/-500000). The precise GPS time of week in seconds is: (iTOW * 1e-3) + (fTOW * 1e-9)
     short           week;       // weeks  GPS week number of the navigation epoch

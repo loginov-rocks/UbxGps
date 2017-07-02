@@ -25,7 +25,7 @@ private:
     byte read();
     void calculateChecksum();
 
-    /* Class Properties */
+    // Class properties
     HardwareSerial& serial;
     unsigned char offsetClassProperties = 8;
     unsigned char offsetHeaders = 4;
@@ -33,7 +33,7 @@ private:
     unsigned char carriagePosition;
     unsigned char checksum[2];
 
-    /* Headers (common) */
+    // Headers (common)
     unsigned char headerClass;
     unsigned char headerId;
     unsigned short headerLength;

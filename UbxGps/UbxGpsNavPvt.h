@@ -12,7 +12,7 @@
 class UbxGpsNavPvt : public UbxGps {
 public:
 
-    //        Type  Name           Unit   Descrption (scaling)
+    //        Type  Name           Unit   Description (scaling)
     unsigned  long  iTOW;       // ms     GPS time of week of the navigation epoch. See the description of iTOW for details.
     unsigned  short year;       // y      Year UTC
     unsigned  char  month;      // month  Month, range 1..12 UTC

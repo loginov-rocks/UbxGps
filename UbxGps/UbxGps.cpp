@@ -40,54 +40,54 @@ boolean UbxGps::ready() {
     while (this->available()) {
         byte c = this->read();
 
-        /* Carriage is at first or second sync byte, should be equals */
+        // Carriage is at first or second sync byte, should be equals
         if (p < 2) {
             if (c == UBXGPS_HEADER[p]) {
                 p++;
             }
-            /* Reset if not */
+            // Reset if not
             else {
                 p = 0;
             }
         }
 
-        /* After successful sync with header */
+        // After successful sync with header
         else {
 
-            /* Put byte read to particular address of this object which depends on carriage position */
+            // Put byte read to particular address of this object which depends on carriage position
             if (p < (this->size + 2)) {
                 ((unsigned char*)(this))[p - 2 + this->offsetClassProperties] = c;
             }
 
-            /* Move the carriage forward */
+            // Move the carriage forward
             p++;
 
-            /* Carriage is at the first checksum byte, we can calculate our checksum, but not compare because this byte is not read */
+            // Carriage is at the first checksum byte, we can calculate our checksum, but not compare because this byte is not read
             if (p == (this->size + 2)) {
                 this->calculateChecksum();
             }
 
-            /* Carriage is at the second checksum byte, but only the first byte of checksum read, check if it equals to ours */
+            // Carriage is at the second checksum byte, but only the first byte of checksum read, check if it equals to ours
             else if (p == (this->size + 3)) {
-                /* Reset if not */
+                // Reset if not
                 if (c != this->checksum[0]) {
                     p = 0;
                 }
             }
 
-            /* Carriage is after the second checksum byte, which has been read, check if it equals to ours */
+            // Carriage is after the second checksum byte, which has been read, check if it equals to ours
             else if (p == (this->size + 4)) {
-                /* Reset the carriage */
+                // Reset the carriage
                 p = 0;
 
-                /* The readings are correct and filled the object, return true */
+                // The readings are correct and filled the object, return true
                 if (c == this->checksum[1]) {
                     this->carriagePosition = p;
                     return true;
                 }
             }
 
-            /* Reset the carriage if it is out of packet */
+            // Reset the carriage if it is out of packet
             else if (p > (this->size + 4)) {
                 p = 0;
             }
@@ -95,5 +95,6 @@ boolean UbxGps::ready() {
     }
 
     this->carriagePosition = p;
+
     return false;
 }
