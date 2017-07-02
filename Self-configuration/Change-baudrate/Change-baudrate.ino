@@ -10,37 +10,45 @@
  * GND - GND
  */
 
-#define PC_BAUDRATE   9600
-#define GPS_BAUDRATE  9600
+#define PC_BAUDRATE         9600
+#define GPS_BAUDRATE_BEFORE 9600
+#define GPS_BAUDRATE_AFTER  115200
 
 // Packet buffer
 byte packet[] = {
     0xB5, // sync char 1
     0x62, // sync char 2
     0x06, // class
-    0x09, // id
-    0x0D, // length
+    0x00, // id
+    0x14, // length
     0x00, // length
-    0xFF, // payload
-    0xFF, // payload
+    0x01, // payload
+    0x00, // payload
+    0x00, // payload
+    0x00, // payload
+    0xD0, // payload
+    0x08, // payload
+    0x00, // payload
+    0x00, // payload
+    0x00, // payload
+    0xC2, // payload
+    0x01, // payload
+    0x00, // payload
+    0x07, // payload
+    0x00, // payload
+    0x03, // payload
     0x00, // payload
     0x00, // payload
     0x00, // payload
     0x00, // payload
     0x00, // payload
-    0x00, // payload
-    0xFF, // payload
-    0xFF, // payload
-    0x00, // payload
-    0x00, // payload
-    0x17, // payload
-    0x2F, // CK_A
-    0xAE, // CK_B
+    0xC0, // CK_A
+    0x7E, // CK_B
 };
 
 void setup() {
     Serial.begin(PC_BAUDRATE);
-    Serial3.begin(GPS_BAUDRATE);
+    Serial3.begin(GPS_BAUDRATE_BEFORE);
 
     // Print ready packet just for debug
     printPacket(packet, sizeof(packet));
@@ -49,6 +57,9 @@ void setup() {
     for (byte i = 0; i < sizeof(packet); i++) {
         Serial3.write(packet[i]);
     }
+
+    Serial3.flush();
+    Serial3.begin(GPS_BAUDRATE_AFTER);
 }
 
 void loop() {
