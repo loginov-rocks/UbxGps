@@ -4,9 +4,13 @@
 
 This library depends on GPS module configuration and can handle only one type of UBX packet, which you can choose during [GPS module configuration](#gps-module-configuration). UBX GPS Library provides easy-to-use interface to all the available data in accordance with the Protocol Specification that you can find in the `Docs` directory. Also, full description of fields is accessible in the source codes.
 
+#### UbxGpsNavPosecef.h
+
+_NAV-POSECEF (Position Solution in ECEF):_ iTOW, ecefX, ecefY, ecefZ, pAcc
+
 #### UbxGpsNavPosllh.h
 
-_NAV-POSLLH (Position Solution in ECEF):_ iTOW, lon, lat, height, hMSL, hAcc, vAcc
+_NAV-POSLLH (Geodetic Position Solution):_ iTOW, lon, lat, height, hMSL, hAcc, vAcc
 
 #### UbxGpsNavPvt.h
 
@@ -126,6 +130,10 @@ More details about u-blox GPS module configuration you can find in _**Receiver D
 Feel free to add something useful to this library :relaxed: For example new classes for UBX packets!
 
 ## History
+
+### July 2, 2017
+
+UbxGpsNavPosecef.h added
 
 ### July 23, 2016
 
