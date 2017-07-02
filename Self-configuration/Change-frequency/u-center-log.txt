@@ -1,0 +1,19 @@
+﻿13:24:16  0000  B5 62 06 08 06 00 64 00 01 00 01 00 7A 12        µb....d.....z..
+13:24:16  R <- UBX CFG-RATE,  Size  14,  'Rates'
+Send CFG-RATE to set measurement period to 100 ms
+
+13:24:16  0000  B5 62 06 08 00 00 0E 30                          µb.....0.
+13:24:16  R <- UBX CFG,  Size   8,  'Config'
+Poll Navigation/Measurement Rate Settings
+
+13:24:16  0000  B5 62 05 01 02 00 06 08 16 3F                    µb.......?.
+13:24:16  R -> UBX ACK-ACK,  Size  10,  'Acknowledged'
+CFG-RATE acknowledged
+
+13:24:16  0000  B5 62 06 08 06 00 64 00 01 00 01 00 7A 12        µb....d.....z..
+13:24:16  R -> UBX CFG-RATE,  Size  14,  'Rates'
+Receiver responded with rates
+
+13:24:16  0000  B5 62 05 01 02 00 06 08 16 3F                    µb.......?.
+13:24:16  R -> UBX ACK-ACK,  Size  10,  'Acknowledged'
+CFG-RATE acknowledged

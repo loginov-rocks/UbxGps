@@ -1,0 +1,87 @@
+﻿10:43:17  0000  B5 62 06 01 03 00 F0 0A 00 04 23                 µb....ð...#.
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set DTM message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 09 00 03 21                 µb....ð...!.
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GBS message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 00 00 FA 0F                 µb....ð..ú..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GGA message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 01 00 FB 11                 µb....ð..û..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GLL message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 0D 00 07 29                 µb....ð...).
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GNS message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 06 00 00 1B                 µb....ð.....
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GRS message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 02 00 FC 13                 µb....ð..ü..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GSA message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 07 00 01 1D                 µb....ð.....
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GST message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 03 00 FD 15                 µb....ð..ý..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set GSV message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 04 00 FE 17                 µb....ð..þ..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set RMC message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 0E 00 08 2B                 µb....ð...+.
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+NOTICE: Send CFG-MSG to set unknown message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 0F 00 09 2D                 µb....ð...-.
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+NOTICE: Send CFG-MSG to set unknown message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 05 00 FF 19                 µb....ð..ÿ..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set VTG message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F0 08 00 02 1F                 µb....ð.....
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set ZDA message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F1 00 00 FB 12                 µb....ñ..û..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set POSITION message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F1 01 00 FC 14                 µb....ñ..ü..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+NOTICE: Send CFG-MSG to set unknown message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F1 03 00 FE 18                 µb....ñ..þ..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set SVSTATUS message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F1 04 00 FF 1A                 µb....ñ..ÿ..
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+Send CFG-MSG to set TIME message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F1 05 00 00 1C                 µb....ñ.....
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+NOTICE: Send CFG-MSG to set unknown message rate = 0
+
+10:43:17  0000  B5 62 06 01 03 00 F1 06 00 01 1E                 µb....ñ.....
+10:43:17  R <- UBX CFG,  Size  11,  'Config'
+NOTICE: Send CFG-MSG to set unknown message rate = 0
+
+10:43:17  0000  B5 62 05 01 02 00 06 01 0F 38                    µb.......8.
+10:43:17  R -> UBX ACK-ACK,  Size  10,  'Acknowledged'
+Receiver successfully acknowledged CFG-MSG
+
+10:43:18  0000  B5 62 05 00 02 00 06 01 0E 33                    µb.......3.
+10:43:18  R -> UBX ACK-NAK,  Size  10,  'Not Acknowledged'
+Receiver not acknowledged CFG-MSG

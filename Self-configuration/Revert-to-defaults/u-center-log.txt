@@ -1,0 +1,8 @@
+﻿12:49:33  0000  B5 62 06 09 0D 00 FF FF 00 00 00 00 00 00 FF FF  µb....ÿÿ......ÿÿ
+          0010  00 00 17 2F AE                                   .../®.
+12:49:33  R <- UBX CFG-CFG,  Size  21,  'Configuration'
+Send CFG-CFG message to revert receiver to the default configuration
+
+12:49:33  0000  B5 62 05 01 02 00 06 09 17 40                    µb.......@.
+12:49:33  R -> UBX ACK-ACK,  Size  10,  'Acknowledged'
+Receiver successfully acknowledged CFG-CFG
