@@ -28,7 +28,7 @@ This library is designed to work with GPS module through the hardware serial por
 
 Download `UbxGps` and place it to the Arduino libraries directory. Refer to [How to install Libraries](https://www.arduino.cc/en/Guide/Libraries) for details.
 
-Next step is configuring your GPS module properly, to find out how to do this see section [GPS module configuration](#gps-module-configuration).
+Next step is configuring your GPS module properly, to find out how to do this see section [GPS module configuration](#gps-module-configuration). Also, take a look at the [Auto-configuration](https://github.com/1oginov/UBX-GPS-Library/blob/master/Configuration/Auto-configuration-Mega/Auto-configuration-Mega.ino) sketch for the Arduino Mega boards to configure your GPS module automatically to get NAV-PVT messages with 100 ms frequency and 115200 baudrate. 
 
 After that you can use included examples or play with following simple sketch:
 
@@ -60,6 +60,16 @@ So we have an Arduino board and a GPS module. Wiring is pretty simple: `GND` to 
 Because of Uno has only one TX/RX pair we should connect GPS module's `TX` to the `2` pin and `RX` to the `3` pin and use `SoftwareSerial` library for communicate with GPS. If you have something with more than one TX/RX pair on the board you can use it, for example for Mega we can connect GPS's `RX` to the `TX3` and `TX` to the `RX3`.
 
 ![Wiring](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Step%201.%20Wiring.jpg)
+
+### Auto-configuration
+
+After wiring you can upload the [Auto-configuration](https://github.com/1oginov/UBX-GPS-Library/blob/master/Configuration/Auto-configuration-Mega/Auto-configuration-Mega.ino) sketch for the Arduino Mega boards to configure your GPS module automatically.
+
+At the moment it configures the receiver to get NAV-PVT messages with 100 ms frequency and 115200 baudrate, but you can change it according your needs.
+
+You are not required to follow next steps and [use u-center](#step-3-meet-u-center) after that, you can pass to the [Checks](#step-9-checks) step instead.
+
+![Auto-configuration](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/Configuration/Auto-configuration.jpg)
 
 ### Step 2. Serial bridge
 
@@ -130,6 +140,10 @@ More details about u-blox GPS module configuration you can find in _**Receiver D
 Feel free to add something useful to this library :relaxed: For example new classes for UBX packets!
 
 ## History
+
+### July 3, 2017
+
+Auto-configuration sketch for the Arduino Mega boards added
 
 ### July 2, 2017
 
