@@ -1,0 +1,30 @@
+#######################################
+# Syntax Coloring Map For UbxGps
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+UbxGps	KEYWORD1
+UbxGpsNavPosecef	KEYWORD1
+UbxGpsNavPosllh	KEYWORD1
+UbxGpsNavPvt	KEYWORD1
+UbxGpsNavSol	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+ready	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+UBXGPS_HEADER	LITERAL1
