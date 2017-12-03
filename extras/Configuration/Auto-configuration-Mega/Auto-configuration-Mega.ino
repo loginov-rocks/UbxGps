@@ -1,17 +1,9 @@
 /**
- * UBX GPS Library
- * Created by Danila Loginov, July 2, 2016
- * https://github.com/1oginov/UBX-GPS-Library
+ * The sketch restores the receiver default configuration and configure it to get NAV-PVT messages with 100 ms
+ * frequency and 115200 baudrate. After the auto-configuration, it transmits the data from the receiver to the PC and
+ * vice versa.
  *
- * Sketch, restoring the receiver's default configuration and configure it to get
- * NAV-PVT messages with 100 ms frequency and 115200 baudrate. After the auto-
- * configuration transmits the data from the receiver to the PC and vice versa.
- *
- * Скетч, сбрасывающий приёмник к конфигурации по умолчанию и настраивающий его для
- * получения NAV-PVT сообщений с частотой 100 ms на скорости 115200. После
- * выполнения самонастройки передает данные от приёмника компьютеру и наоборот.
- *
- * U-blox NEO-7M - Arduino Mega
+ * u-blox NEO-7M - Arduino Mega
  * VCC - 5V
  * RX - TX3
  * TX - RX3
@@ -22,29 +14,15 @@
 #define PC_BAUDRATE 115200L
 #define GPS_SERIAL  Serial3
 
-// Default baudrate is determined by the receiver's manufacturer
-// Скорость обмена по умолчанию определена производителем приёмника
-
+// Default baudrate is determined by the receiver manufacturer.
 #define GPS_DEFAULT_BAUDRATE    9600L
 
-// Wanted buadrate can be 9600L (not changed after defaults) or 115200L (changed
-// by the changeBaudrate() function with prepared message) at the moment
-//
-// Желаемая скорость обмена в настоящий момент может быть либо 9600L (не меняется
-// после возврата к настройкам по умолчанию), либо 115200L (изменяется вызовом
-// функции changeBaudrate())
-
+// Wanted buadrate at the moment can be 9600L (not changed after defaults) or 115200L (changed by the
+// `changeBaudrate()` function with a prepared message).
 #define GPS_WANTED_BAUDRATE     115200L
 
-// Array of possible baudrates that can be used by receiver, sorted descending
-// to prevent excess Serial flush/begin after restoring defaults. You can uncomment
-// values that can be used by your receiver before the auto-configuration.
-//
-// Массив возможных значений скорости обмена, которые могут быть использованы
-// приёмником, отсортированы по убыванию, чтобы предотвратить лишние flush/begin
-// после возврата к настройкам по умолчанию. Вы можете разкомментировать значения,
-// которые могут использоваться приёмником перед самонастройкой.
-
+// Array of possible baudrates that can be used by the receiver, sorted descending to prevent excess Serial flush/begin
+// after restoring defaults. You can uncomment values that can be used by your receiver before the auto-configuration.
 const long possibleBaudrates[] = {
     //921600L,
     //460800L,
@@ -57,18 +35,20 @@ const long possibleBaudrates[] = {
     //4800L,
 };
 
-void setup() {
+void setup()
+{
     PC_SERIAL.begin(PC_BAUDRATE);
     PC_SERIAL.println("Starting auto-configuration...");
 
-    // Restoring receiver's default configuration
-    // Возврат приёмника к конфигурации по умолчанию
-    for (byte i = 0; i < sizeof(possibleBaudrates) / sizeof(*possibleBaudrates); i++) {
+    // Restore the receiver default configuration
+    for (byte i = 0; i < sizeof(possibleBaudrates) / sizeof(*possibleBaudrates); i++)
+    {
         PC_SERIAL.print("Trying to restore defaults at ");
         PC_SERIAL.print(possibleBaudrates[i]);
         PC_SERIAL.println(" baudrate...");
 
-        if (i != 0) {
+        if (i != 0)
+        {
             delay(100); // Little delay before flushing
             GPS_SERIAL.flush();
         }
@@ -77,9 +57,9 @@ void setup() {
         restoreDefaults();
     }
 
-    // Switching receiver's serial to the default baudrate
-    // Перевод последовательного порта для общения с приёмником на скорость по умолчанию
-    if (possibleBaudrates[sizeof(possibleBaudrates) / sizeof(*possibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE) {
+    // Switch the receiver serial to the default baudrate
+    if (possibleBaudrates[sizeof(possibleBaudrates) / sizeof(*possibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
+    {
         PC_SERIAL.print("Switching to the default baudrate which is ");
         PC_SERIAL.print(GPS_DEFAULT_BAUDRATE);
         PC_SERIAL.println("...");
@@ -89,14 +69,13 @@ void setup() {
         GPS_SERIAL.begin(GPS_DEFAULT_BAUDRATE);
     }
 
-    // Disabling NMEA messages by sending appropriate packets
-    // Отключение NMEA сообщений с помощью соответствующих пакетов
+    // Disable NMEA messages by sending appropriate packets
     PC_SERIAL.println("Disabling NMEA messages...");
     disableNmea();
 
-    // Switching receiver's serial to the wanted baudrate
-    // Перевод последовательного порта для общения с приёмником на желаемую скорость
-    if (GPS_WANTED_BAUDRATE != GPS_DEFAULT_BAUDRATE) {
+    // Switch the receiver serial to the wanted baudrate
+    if (GPS_WANTED_BAUDRATE != GPS_DEFAULT_BAUDRATE)
+    {
         PC_SERIAL.print("Switching receiver to the wanted baudrate which is ");
         PC_SERIAL.print(GPS_WANTED_BAUDRATE);
         PC_SERIAL.println("...");
@@ -108,18 +87,15 @@ void setup() {
         GPS_SERIAL.begin(GPS_WANTED_BAUDRATE);
     }
 
-    // Increasing frequency to 100 ms
-    // Увеличение частоты до 100 мс
+    // Increase frequency to 100 ms
     PC_SERIAL.println("Changing receiving frequency to 100 ms...");
     changeFrequency();
 
-    // Disabling unnecessary channels like SBAS or QZSS
-    // Отключение ненужных каналов, как SBAS или QZSS
+    // Disable unnecessary channels like SBAS or QZSS
     PC_SERIAL.println("Disabling unnecessary channels...");
     disableUnnecessaryChannels();
 
-    // Enabling NAV-PVT messages
-    // Включение NAV-PVT сообщений
+    // Enable NAV-PVT messages
     PC_SERIAL.println("Enabling NAV-PVT messages...");
     enableNavPvt();
 
@@ -129,9 +105,9 @@ void setup() {
     GPS_SERIAL.flush();
 }
 
-// Function, sending packet to the receiver to restore default configuration
-// Функция, отправляющая приёмнику пакет, восстанавливающий конфигурацию по умолчанию
-void restoreDefaults() {
+// Send a packet to the receiver to restore default configuration
+void restoreDefaults()
+{
     // CFG-CFG packet
     byte packet[] = {
         0xB5, // sync char 1
@@ -160,9 +136,9 @@ void restoreDefaults() {
     sendPacket(packet, sizeof(packet));
 }
 
-// Function, sending set of packets to the receiver to disable NMEA messages
-// Функция, отправляющая приёмнику набор пакетов, выключающих отправку NMEA сообщений
-void disableNmea() {
+// Send a set of packets to the receiver to disable NMEA messages
+void disableNmea()
+{
     // Array of two bytes for CFG-MSG packets payload
     byte messages[][2] = {
         {0xF0, 0x0A},
@@ -207,9 +183,11 @@ void disableNmea() {
     byte payloadOffset = 6;
 
     // Iterate over the messages array
-    for (byte i = 0; i < sizeof(messages) / sizeof(*messages); i++) {
+    for (byte i = 0; i < sizeof(messages) / sizeof(*messages); i++)
+    {
         // Copy two bytes of payload to the packet buffer
-        for (byte j = 0; j < sizeof(*messages); j++) {
+        for (byte j = 0; j < sizeof(*messages); j++)
+        {
             packet[payloadOffset + j] = messages[i][j];
         }
 
@@ -217,9 +195,9 @@ void disableNmea() {
         packet[packetSize - 2] = 0x00;
         packet[packetSize - 1] = 0x00;
 
-        // Calculate checksum over the packet buffer excluding sync (first two)
-        // and checksum chars (last two)
-        for (byte j = 0; j < packetSize - 4; j++) {
+        // Calculate checksum over the packet buffer excluding sync (first two) and checksum chars (last two)
+        for (byte j = 0; j < packetSize - 4; j++)
+        {
             packet[packetSize - 2] += packet[2 + j];
             packet[packetSize - 1] += packet[packetSize - 2];
         }
@@ -228,9 +206,9 @@ void disableNmea() {
     }
 }
 
-// Function, sending packet to the receiver to change baudrate to 115200
-// Функция, отправляющая приёмнику пакет, устанавливающий скорость обмена на 115200
-void changeBaudrate() {
+// Send a packet to the receiver to change baudrate to 115200
+void changeBaudrate()
+{
     // CFG-PRT packet
     byte packet[] = {
         0xB5, // sync char 1
@@ -266,9 +244,9 @@ void changeBaudrate() {
     sendPacket(packet, sizeof(packet));
 }
 
-// Function, sending packet to the receiver to change frequency to 100 ms
-// Функция, отправляющая приёмнику пакет, устанавливающий частоту 100 мс
-void changeFrequency() {
+// Send a packet to the receiver to change frequency to 100 ms
+void changeFrequency()
+{
     // CFG-RATE packet
     byte packet[] = {
         0xB5, // sync char 1
@@ -290,9 +268,9 @@ void changeFrequency() {
     sendPacket(packet, sizeof(packet));
 }
 
-// Function, sending packet to the receiver to disable unnecessary channels
-// Функция, отправляющая приёмнику пакет, отключающий ненужные каналы
-void disableUnnecessaryChannels() {
+// Send a packet to the receiver to disable unnecessary channels
+void disableUnnecessaryChannels()
+{
     // CFG-GNSS packet
     byte packet[] = {
         0xB5, // sync char 1
@@ -306,7 +284,7 @@ void disableUnnecessaryChannels() {
         0x01, 0x00, 0x00, 0x01, 0x01, 0x01, 0x03, 0x00, // payload
         0x00, 0x00, 0x00, 0x01, 0x05, 0x00, 0x03, 0x00, // payload
         0x00, 0x00, 0x00, 0x01, 0x06, 0x08, 0xFF, 0x00, // payload
-        0x00, 0x00, 0x00, 0x01, // payload
+        0x00, 0x00, 0x00, 0x01,                         // payload
 
         0xA4, // CK_A
         0x25, // CK_B
@@ -315,9 +293,9 @@ void disableUnnecessaryChannels() {
     sendPacket(packet, sizeof(packet));
 }
 
-// Function, sending packet to the receiver to enable NAV-PVT messages
-// Функция, отправляющая приёмнику пакет, включающий отправку NAV-PVT сообщений
-void enableNavPvt() {
+// Send a packet to the receiver to enable NAV-PVT messages
+void enableNavPvt()
+{
     // CFG-MSG packet
     byte packet[] = {
         0xB5, // sync char 1
@@ -336,25 +314,29 @@ void enableNavPvt() {
     sendPacket(packet, sizeof(packet));
 }
 
-// Function, sending specified packed to the receiver
-// Функция, отправляющая приёмнику указанный пакет
-void sendPacket(byte *packet, byte len) {
-    for (byte i = 0; i < len; i++) {
+// Send the packet specified to the receiver
+void sendPacket(byte *packet, byte len)
+{
+    for (byte i = 0; i < len; i++)
+    {
         GPS_SERIAL.write(packet[i]);
     }
 
     printPacket(packet, len);
 }
 
-// Function, printing packet to the PC's serial in hexadecimal form
-// Функция, выводящая пакет компьютеру в шестнадцатеричном виде
-void printPacket(byte *packet, byte len) {
+// Print the packet specified to the PC serial in a hexadecimal form
+void printPacket(byte *packet, byte len)
+{
     char temp[3];
 
-    for (byte i = 0; i < len; i++) {
+    for (byte i = 0; i < len; i++)
+    {
         sprintf(temp, "%.2X", packet[i]);
         PC_SERIAL.print(temp);
-        if (i != len - 1) {
+
+        if (i != len - 1)
+        {
             PC_SERIAL.print(' ');
         }
     }
@@ -362,17 +344,16 @@ void printPacket(byte *packet, byte len) {
     PC_SERIAL.println();
 }
 
-// If there is data from the receiver, read it and send to the PC or vice versa
-// Если есть данные от приёмника, то считать и отправить их компьютеру, и наоборот
-void loop() {
-
-    if (GPS_SERIAL.available()) {
+// If there is a data from the receiver, read it and send to the PC or vice versa
+void loop()
+{
+    if (GPS_SERIAL.available())
+    {
         PC_SERIAL.write(GPS_SERIAL.read());
     }
 
-    if (PC_SERIAL.available()) {
+    if (PC_SERIAL.available())
+    {
         GPS_SERIAL.write(PC_SERIAL.read());
     }
-
 }
-
