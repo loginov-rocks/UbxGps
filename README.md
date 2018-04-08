@@ -1,8 +1,7 @@
 # UbxGps
 
 **This Arduino library was developed for the fastest and simplest communication with u-blox GPS modules**, which
-support proprietary UBX protocol that is more compact than common NMEA. Main idea was to achieve real 10 Hz from NEO-7M
-and it was done. Huge thanks to **iforce2d** for a [tutorial video](https://www.youtube.com/watch?v=TwhCX0c8Xe0) whose
+support proprietary UBX protocol that is binary and therefore more compact than common NMEA. Main idea was to achieve real 10 Hz from NEO-7M and it was done. Huge thanks to **iforce2d** for a [tutorial video](https://www.youtube.com/watch?v=TwhCX0c8Xe0) whose
 code is laid in the basics of the library.
 
 This library depends on GPS module configuration and can handle only one type of UBX packet at a time, which you can
@@ -11,10 +10,10 @@ available data in accordance with the Protocol Specification that you can find i
 [Docs](https://github.com/1oginov/UbxGps/tree/master/extras/Docs) directory. Also, full description of properties is
 accessible in the source codes.
 
-## Supported UBX packets
+## Supported UBX packet types
 
-UBX packets supported by the library are listed below. Feel free to add other packets to the library, since the library
-is designed to make new packets as easy as it can be.
+UBX packet types supported by the library are listed below. Feel free to add other packets to the library, since the library
+is designed to make new types as easy as it can be.
 
 ### UbxGpsNavPosecef.h
 
@@ -86,8 +85,8 @@ can be used, but I can't guarantee it will work without bugs on a high frequency
 ### Step 1. Wiring
 
 So we have an Arduino board and a GPS module. Wiring is pretty simple: `GND` to `GND`, `VCC` to `5V`, `TX` to `RX` and
-`RX` to `TX`. Because of Uno has only one TX/RX pair we should connect GPS module `TX` to the `2` pin and `RX` to the
-`3` pin and use `SoftwareSerial` library for communicate with GPS. If you have something with more than one TX/RX pair
+`RX` to `TX`. Because Uno has only one TX/RX pair, we should connect GPS module `TX` to the `2` pin and `RX` to the
+`3` pin and use `SoftwareSerial` library to communicate with the GPS. If you have something with more than one TX/RX pair
 on the board you can use it, for example for Mega we can connect GPS `RX` to the `TX3` and `TX` to the `RX3`.
 
 ![Wiring](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/extras/Configuration/Step%201.%20Wiring.jpg)
@@ -99,17 +98,17 @@ After wiring you can upload the
 sketch for the Arduino Mega boards to configure your GPS module automatically.
 
 At the moment it configures the receiver to get NAV-PVT messages with 100 ms frequency and 115200 baudrate, but you can
-change it according your needs.
-
-You are not required to follow next steps and [use u-center](#step-3-meet-u-center) after that, you can pass to the
-[Checks](#step-9-checks) step instead.
+change it according to your needs.
 
 ![Auto-configuration](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/extras/Configuration/Auto-configuration.jpg)
 
 ### Step 2. Serial bridge
 
-Let's make a bridge between GPS module and computer: upload `Serial-Bridge-Uno.ino` or `Serial-Bridge-Mega.ino` sketch
-on the board, it allows us to communicate with GPS module directly from computer. Open *Serial Monitor*, and if your GPS
+This step is optional and is only needed to [use u-center](#step-3-meet-u-center). If you don't want to do it, feel free to skip to 
+[Checks](#step-9-checks).
+
+Let's make a bridge between the GPS module and the computer: upload `Serial-Bridge-Uno.ino` or `Serial-Bridge-Mega.ino` sketch
+to the board, it allows us to communicate with GPS module directly from computer. Open *Serial Monitor*, and if your GPS
 module is new or have default settings you will see something like on the picture below. If everything is OK, GPS will
 send some data.
 
@@ -124,7 +123,7 @@ data.
 
 ![Meet u-center](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/extras/Configuration/Step%203.%20Meet%20u-center.jpg)
 
-### Step 4. Change baudrate (if you want)
+### Step 4. Change baudrate (optional)
 
 If you have something with more than one TX/RX pair it will be useful to raise the baudrate of GPS module. It can helps
 if you gonna work with high frequency like 5 or 10 Hz. Open *View — Messages View* window and find *UBX — CGF — PRT*
@@ -137,7 +136,7 @@ update `GPS_BAUDRATE` and `PC_BAUDRATE` if you want and uploads it to the board.
 
 ![Change baudrate](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/extras/Configuration/Step%204.%20Change%20baudrate.jpg)
 
-### Step 5. Change frequency (if you want)
+### Step 5. Change update frequency (optional)
 
 In *Messages View* in the *UBX — CFG — RATE* tab you can change *Measurement Period* to raise frequency of getting
 data. I want to achieve 10 Hz, so I change *Measurement Period* to the 100 milliseconds and click *Send* button.
@@ -153,12 +152,12 @@ so uncheck other channels at *enable* column. Again, click *Send* to save change
 
 ### Step 7. Choose packet
 
-UBX GPS library works with only one type of packet which is UBX, so we need to fully disable NMEA packets and enable one
+UBX GPS library works with only one type of UBX packet, so we need to fully disable NMEA packets and enable one
 of the UBX group. Open context menu on *Messages View — NMEA* and click *Disable Child Messages*. u-center will send
 appropriate command to the GPS module and getting data will stops. If you're using `SoftwareSerial` it can takes a time
 to get things right, try to click *Disable Child Messages* again if it not works.
 
-Then, choose UBX packet you want to work with, for example *UBX — NAV — PVT*, open context menu on it and click
+Then, choose a UBX packet type you want to work with, for example *UBX — NAV — PVT*, open context menu on it and click
 *Enable Message*, GPS module will start getting data again. Open *View — Packet Console* to see if everything is OK, it
 should get one type of UBX packet with chosen frequency.
 
@@ -180,8 +179,7 @@ you'll get desired data. **That's all Folks!**
 
 ![Checks](https://raw.githubusercontent.com/1oginov/UBX-GPS-Library/master/extras/Configuration/Step%209.%20Checks.jpg)
 
-More details about u-blox GPS module configuration you can find in ***Receiver Description** — Receiver Configuration*
-in the [Docs](https://github.com/1oginov/UbxGps/tree/master/extras/Docs) directory.
+More details about u-blox GPS module configuration are in ***Receiver Description** — Receiver Configuration* found under [Docs](https://github.com/1oginov/UbxGps/tree/master/extras/Docs) directory.
 
 ## Compatible GPS modules
 
