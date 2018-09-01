@@ -10,16 +10,18 @@
  * GND - GND
  */
 
-#define PC_SERIAL   Serial
+#include <Arduino.h>
+
+#define PC_SERIAL Serial
 #define PC_BAUDRATE 115200L
-#define GPS_SERIAL  Serial3
+#define GPS_SERIAL Serial3
 
 // Default baudrate is determined by the receiver manufacturer.
-#define GPS_DEFAULT_BAUDRATE    9600L
+#define GPS_DEFAULT_BAUDRATE 9600L
 
 // Wanted buadrate at the moment can be 9600L (not changed after defaults) or 115200L (changed by the
 // `changeBaudrate()` function with a prepared message).
-#define GPS_WANTED_BAUDRATE     115200L
+#define GPS_WANTED_BAUDRATE 115200L
 
 // Array of possible baudrates that can be used by the receiver, sorted descending to prevent excess Serial flush/begin
 // after restoring defaults. You can uncomment values that can be used by your receiver before the auto-configuration.
@@ -40,7 +42,7 @@ void setup()
     PC_SERIAL.begin(PC_BAUDRATE);
     PC_SERIAL.println("Starting auto-configuration...");
 
-    // Restore the receiver default configuration
+    // Restore the receiver default configuration.
     for (byte i = 0; i < sizeof(possibleBaudrates) / sizeof(*possibleBaudrates); i++)
     {
         PC_SERIAL.print("Trying to restore defaults at ");
@@ -49,7 +51,7 @@ void setup()
 
         if (i != 0)
         {
-            delay(100); // Little delay before flushing
+            delay(100); // Little delay before flushing.
             GPS_SERIAL.flush();
         }
 
@@ -57,23 +59,23 @@ void setup()
         restoreDefaults();
     }
 
-    // Switch the receiver serial to the default baudrate
+    // Switch the receiver serial to the default baudrate.
     if (possibleBaudrates[sizeof(possibleBaudrates) / sizeof(*possibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
     {
         PC_SERIAL.print("Switching to the default baudrate which is ");
         PC_SERIAL.print(GPS_DEFAULT_BAUDRATE);
         PC_SERIAL.println("...");
 
-        delay(100); // Little delay before flushing
+        delay(100); // Little delay before flushing.
         GPS_SERIAL.flush();
         GPS_SERIAL.begin(GPS_DEFAULT_BAUDRATE);
     }
 
-    // Disable NMEA messages by sending appropriate packets
+    // Disable NMEA messages by sending appropriate packets.
     PC_SERIAL.println("Disabling NMEA messages...");
     disableNmea();
 
-    // Switch the receiver serial to the wanted baudrate
+    // Switch the receiver serial to the wanted baudrate.
     if (GPS_WANTED_BAUDRATE != GPS_DEFAULT_BAUDRATE)
     {
         PC_SERIAL.print("Switching receiver to the wanted baudrate which is ");
@@ -82,33 +84,33 @@ void setup()
 
         changeBaudrate();
 
-        delay(100); // Little delay before flushing
+        delay(100); // Little delay before flushing.
         GPS_SERIAL.flush();
         GPS_SERIAL.begin(GPS_WANTED_BAUDRATE);
     }
 
-    // Increase frequency to 100 ms
+    // Increase frequency to 100 ms.
     PC_SERIAL.println("Changing receiving frequency to 100 ms...");
     changeFrequency();
 
-    // Disable unnecessary channels like SBAS or QZSS
+    // Disable unnecessary channels like SBAS or QZSS.
     PC_SERIAL.println("Disabling unnecessary channels...");
     disableUnnecessaryChannels();
 
-    // Enable NAV-PVT messages
+    // Enable NAV-PVT messages.
     PC_SERIAL.println("Enabling NAV-PVT messages...");
     enableNavPvt();
 
     PC_SERIAL.println("Auto-configuration is complete!");
 
-    delay(100); // Little delay before flushing
+    delay(100); // Little delay before flushing.
     GPS_SERIAL.flush();
 }
 
-// Send a packet to the receiver to restore default configuration
+// Send a packet to the receiver to restore default configuration.
 void restoreDefaults()
 {
-    // CFG-CFG packet
+    // CFG-CFG packet.
     byte packet[] = {
         0xB5, // sync char 1
         0x62, // sync char 2
@@ -136,10 +138,10 @@ void restoreDefaults()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a set of packets to the receiver to disable NMEA messages
+// Send a set of packets to the receiver to disable NMEA messages.
 void disableNmea()
 {
-    // Array of two bytes for CFG-MSG packets payload
+    // Array of two bytes for CFG-MSG packets payload.
     byte messages[][2] = {
         {0xF0, 0x0A},
         {0xF0, 0x09},
@@ -163,7 +165,7 @@ void disableNmea()
         {0xF1, 0x06},
     };
 
-    // CFG-MSG packet buffer
+    // CFG-MSG packet buffer.
     byte packet[] = {
         0xB5, // sync char 1
         0x62, // sync char 2
@@ -179,23 +181,23 @@ void disableNmea()
     };
     byte packetSize = sizeof(packet);
 
-    // Offset to the place where payload starts
+    // Offset to the place where payload starts.
     byte payloadOffset = 6;
 
-    // Iterate over the messages array
+    // Iterate over the messages array.
     for (byte i = 0; i < sizeof(messages) / sizeof(*messages); i++)
     {
-        // Copy two bytes of payload to the packet buffer
+        // Copy two bytes of payload to the packet buffer.
         for (byte j = 0; j < sizeof(*messages); j++)
         {
             packet[payloadOffset + j] = messages[i][j];
         }
 
-        // Set checksum bytes to the null
+        // Set checksum bytes to the null.
         packet[packetSize - 2] = 0x00;
         packet[packetSize - 1] = 0x00;
 
-        // Calculate checksum over the packet buffer excluding sync (first two) and checksum chars (last two)
+        // Calculate checksum over the packet buffer excluding sync (first two) and checksum chars (last two).
         for (byte j = 0; j < packetSize - 4; j++)
         {
             packet[packetSize - 2] += packet[2 + j];
@@ -206,10 +208,10 @@ void disableNmea()
     }
 }
 
-// Send a packet to the receiver to change baudrate to 115200
+// Send a packet to the receiver to change baudrate to 115200.
 void changeBaudrate()
 {
-    // CFG-PRT packet
+    // CFG-PRT packet.
     byte packet[] = {
         0xB5, // sync char 1
         0x62, // sync char 2
@@ -244,10 +246,10 @@ void changeBaudrate()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the receiver to change frequency to 100 ms
+// Send a packet to the receiver to change frequency to 100 ms.
 void changeFrequency()
 {
-    // CFG-RATE packet
+    // CFG-RATE packet.
     byte packet[] = {
         0xB5, // sync char 1
         0x62, // sync char 2
@@ -268,10 +270,10 @@ void changeFrequency()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the receiver to disable unnecessary channels
+// Send a packet to the receiver to disable unnecessary channels.
 void disableUnnecessaryChannels()
 {
-    // CFG-GNSS packet
+    // CFG-GNSS packet.
     byte packet[] = {
         0xB5, // sync char 1
         0x62, // sync char 2
@@ -293,10 +295,10 @@ void disableUnnecessaryChannels()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the receiver to enable NAV-PVT messages
+// Send a packet to the receiver to enable NAV-PVT messages.
 void enableNavPvt()
 {
-    // CFG-MSG packet
+    // CFG-MSG packet.
     byte packet[] = {
         0xB5, // sync char 1
         0x62, // sync char 2
@@ -314,7 +316,7 @@ void enableNavPvt()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send the packet specified to the receiver
+// Send the packet specified to the receiver.
 void sendPacket(byte *packet, byte len)
 {
     for (byte i = 0; i < len; i++)
@@ -325,7 +327,7 @@ void sendPacket(byte *packet, byte len)
     printPacket(packet, len);
 }
 
-// Print the packet specified to the PC serial in a hexadecimal form
+// Print the packet specified to the PC serial in a hexadecimal form.
 void printPacket(byte *packet, byte len)
 {
     char temp[3];
@@ -344,7 +346,7 @@ void printPacket(byte *packet, byte len)
     PC_SERIAL.println();
 }
 
-// If there is a data from the receiver, read it and send to the PC or vice versa
+// If there is a data from the receiver, read it and send to the PC or vice versa.
 void loop()
 {
     if (GPS_SERIAL.available())

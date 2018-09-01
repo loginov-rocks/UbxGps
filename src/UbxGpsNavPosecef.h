@@ -1,7 +1,7 @@
 #ifndef UBXGPSNAVPOSECEF_H_
 #define UBXGPSNAVPOSECEF_H_
 
-#include "UbxGps.h"
+#include <UbxGps.h>
 
 class UbxGpsNavPosecef : public UbxGps
 {

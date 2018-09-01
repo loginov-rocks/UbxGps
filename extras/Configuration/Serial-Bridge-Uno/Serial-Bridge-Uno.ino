@@ -12,12 +12,13 @@
  * GND - GND
  */
 
-#define PC_BAUDRATE     9600
-#define GPS_BAUDRATE    9600
-#define GPS_RX          3
-#define GPS_TX          2
-
+#include <Arduino.h>
 #include <SoftwareSerial.h>
+
+#define PC_BAUDRATE 9600
+#define GPS_BAUDRATE 9600
+#define GPS_RX 3
+#define GPS_TX 2
 
 SoftwareSerial ss(GPS_TX, GPS_RX);
 
@@ -27,7 +28,7 @@ void setup()
     ss.begin(GPS_BAUDRATE);
 }
 
-// If there is a data from the receiver, read it and send to the PC or vice versa
+// If there is a data from the receiver, read it and send to the PC or vice versa.
 void loop()
 {
     if (ss.available())

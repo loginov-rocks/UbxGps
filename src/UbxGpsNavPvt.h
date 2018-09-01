@@ -1,7 +1,7 @@
 #ifndef UBXGPSNAVPVT_H_
 #define UBXGPSNAVPVT_H_
 
-#include "UbxGps.h"
+#include <UbxGps.h>
 
 class UbxGpsNavPvt : public UbxGps
 {
