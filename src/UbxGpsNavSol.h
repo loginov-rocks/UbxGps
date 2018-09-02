@@ -3,7 +3,8 @@
 
 #include <UbxGps.h>
 
-class UbxGpsNavSol : public UbxGps
+template <class T>
+class UbxGpsNavSol : public UbxGps<T>
 {
   public:
     // Type         Name           Unit     Description (scaling)
@@ -27,7 +28,7 @@ class UbxGpsNavSol : public UbxGps
     unsigned char   numSV;      // -        Number of satellites used in Nav Solution
     unsigned long   reserved2;  // -        Reserved
 
-    UbxGpsNavSol(HardwareSerial &serial) : UbxGps(serial)
+    UbxGpsNavSol(T &serial) : UbxGps<T>(serial)
     {
         this->setLength(52);
     }

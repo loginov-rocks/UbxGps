@@ -3,7 +3,8 @@
 
 #include <UbxGps.h>
 
-class UbxGpsNavPvt : public UbxGps
+template <class T>
+class UbxGpsNavPvt : public UbxGps<T>
 {
   public:
     // Type         Name           Unit     Description (scaling)
@@ -39,7 +40,7 @@ class UbxGpsNavPvt : public UbxGps
     short           reserved2;  // -        Reserved
     unsigned long   reserved3;  // -        Reserved
 
-    UbxGpsNavPvt(HardwareSerial &serial) : UbxGps(serial)
+    UbxGpsNavPvt(T &serial) : UbxGps<T>(serial)
     {
         this->setLength(84);
     }
