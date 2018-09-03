@@ -11,12 +11,13 @@
 #include <Arduino.h>
 #include <UbxGpsNavPvt.h>
 
-#define PC_BAUDRATE 9600
-#define GPS_BAUDRATE 9600
+#define GPS_BAUDRATE 115200L
+#define PC_BAUDRATE 115200L
+
 #define DATETIME_FORMAT "%04d.%02d.%02d %02d:%02d:%02d"
 #define DATETIME_LENGTH 20
 
-UbxGpsNavPvt gps(Serial3);
+UbxGpsNavPvt<HardwareSerial> gps(Serial3);
 
 char datetime[DATETIME_LENGTH];
 

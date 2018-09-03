@@ -3,7 +3,8 @@
 
 #include <UbxGps.h>
 
-class UbxGpsNavPosecef : public UbxGps
+template <class T>
+class UbxGpsNavPosecef : public UbxGps<T>
 {
   public:
     // Type         Name           Unit     Description (scaling)
@@ -14,7 +15,7 @@ class UbxGpsNavPosecef : public UbxGps
     long            ecefZ;      // cm       ECEF Z coordinate
     unsigned long   pAcc;       // cm       Position Accuracy Estimate
 
-    UbxGpsNavPosecef(HardwareSerial &serial) : UbxGps(serial)
+    UbxGpsNavPosecef(T &serial) : UbxGps<T>(serial)
     {
         this->setLength(20);
     }

@@ -3,7 +3,8 @@
 
 #include <UbxGps.h>
 
-class UbxGpsNavPosllh : public UbxGps
+template <class T>
+class UbxGpsNavPosllh : public UbxGps<T>
 {
   public:
     // Type         Name           Unit     Description (scaling)
@@ -16,7 +17,7 @@ class UbxGpsNavPosllh : public UbxGps
     unsigned long   hAcc;       // mm       Horizontal accuracy estimate
     unsigned long   vAcc;       // mm       Vertical accuracy estimate
 
-    UbxGpsNavPosllh(HardwareSerial &serial) : UbxGps(serial)
+    UbxGpsNavPosllh(T &serial) : UbxGps<T>(serial)
     {
         this->setLength(28);
     }
