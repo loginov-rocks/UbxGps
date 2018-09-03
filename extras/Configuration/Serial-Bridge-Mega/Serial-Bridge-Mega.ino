@@ -8,8 +8,10 @@
  * GND - GND
  */
 
-#define PC_BAUDRATE     9600
-#define GPS_BAUDRATE    9600
+#include <Arduino.h>
+
+#define PC_BAUDRATE 9600
+#define GPS_BAUDRATE 9600
 
 void setup()
 {
@@ -17,7 +19,7 @@ void setup()
     Serial3.begin(GPS_BAUDRATE);
 }
 
-// If there is a data from the receiver, read it and send to the PC or vice versa
+// If there is a data from the receiver, read it and send to the PC or vice versa.
 void loop()
 {
     if (Serial3.available())

@@ -34,7 +34,7 @@ headingAcc, pDOP, reserved2, reserved3.
 *NAV-SOL (Navigation Solution Information):* iTOW, fTOW, week, gpsFix, flags, ecefX, ecefY, ecefZ, pAcc, ecefVX, ecefVY,
 ecefVZ, sAcc, pDOP, reserved1, numSV, reserved2.
 
-## Quick Start
+## Quick start
 
 Download `UbxGps` and place it to the Arduino libraries directory. Refer to
 [How to install Libraries](https://www.arduino.cc/en/Guide/Libraries) for details.
@@ -50,7 +50,7 @@ After that you can use included examples or play with the following simple sketc
 ```cpp
 #include "UbxGpsNavPvt.h"
 
-UbxGpsNavPvt gps(Serial3);
+UbxGpsNavPvt<HardwareSerial> gps(Serial3);
 
 void setup()
 {
@@ -117,7 +117,7 @@ send some data.
 ### Step 3. Meet u-center
 
 For u-blox GPS module configuration we will use **u-center** program that you can find
-[here](https://www.u-blox.com/en/product/u-center-windows). It parses data from GPS module and provides useful tools to
+[here](https://www.u-blox.com/en/product/u-center). It parses data from GPS module and provides useful tools to
 work with it. Launch program, choose appropriate COM port and set baudrate, 9600 for default. It will start getting some
 data.
 
@@ -183,17 +183,15 @@ More details about u-blox GPS module configuration are in ***Receiver Descriptio
 
 ## Compatible GPS modules
 
-* NEO-7M — tested
-* Other u-blox GPS modules, which supports UBX protocol
-* *Please, notice me if it works with your GPS module*
+* NEO-7M
+* Other u-blox GPS modules supporting UBX protocol
+* *Please notice (create an issue) if it works with your GPS module*
 
 ## Contribution
 
-Feel free to add something useful to this library :relaxed: For example new classes for UBX packets!
+Please use the [dev](https://github.com/1oginov/UbxGps/tree/dev) branch and feel free to contribute!
 
-Please, use the [dev](https://github.com/1oginov/UbxGps/tree/dev) branch for contribution.
-
-## Links
+## Reference
 
 * [u-blox Website](https://www.u-blox.com)
-* [u-center Download page](https://www.u-blox.com/en/product/u-center-windows)
+* [u-center Download page](https://www.u-blox.com/en/product/u-center)
