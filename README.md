@@ -187,10 +187,6 @@ More details about u-blox GPS module configuration are in ***Receiver Descriptio
 * Other u-blox GPS modules supporting UBX protocol
 * *Please notice (create an issue) if it works with your GPS module*
 
-## Contribution
-
-Please use the [dev](https://github.com/1oginov/UbxGps/tree/dev) branch and feel free to contribute!
-
 ## Reference
 
 * [u-blox Website](https://www.u-blox.com)
