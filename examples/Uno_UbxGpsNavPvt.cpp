@@ -1,5 +1,10 @@
 /**
- * The sketch parses UBX messages from u-blox NEO-7M and outputs ready GPS data to a serial port in a CSV format.
+ * The sketch parses UBX messages from u-blox NEO-7M and outputs ready GPS data
+ * to a serial port in a CSV format.
+ *
+ * Please be aware because Arduino Uno is used and it only has one UART, we
+ * deal with software implementation for serial communication, which is
+ * unstable. Use the hardware serial if available!
  *
  * u-blox NEO-7M - Arduino Uno
  * VCC - 5V
@@ -12,10 +17,10 @@
 #include <SoftwareSerial.h>
 #include <UbxGpsNavPvt.h>
 
-#define GPS_BAUDRATE 115200L
+#define COMPUTER_BAUDRATE 115200
+#define GPS_BAUDRATE 115200
 #define GPS_RX 3
 #define GPS_TX 2
-#define PC_BAUDRATE 115200L
 
 #define DATETIME_FORMAT "%04d.%02d.%02d %02d:%02d:%02d"
 #define DATETIME_LENGTH 20
@@ -27,7 +32,7 @@ char datetime[DATETIME_LENGTH];
 
 void setup()
 {
-    Serial.begin(PC_BAUDRATE);
+    Serial.begin(COMPUTER_BAUDRATE);
     gps.begin(GPS_BAUDRATE);
 }
 
