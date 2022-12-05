@@ -1,5 +1,7 @@
 /**
- * The sketch is for communication between PC and any other device using Arduino Mega. With u-blox NEO-7M in the case.
+ * The sketch establishes serial communication between the terminal on the
+ * computer and the UART device with Arduino Mega as a mediator. With u-blox
+ * NEO-7M in this case.
  *
  * u-blox NEO-7M - Arduino Mega
  * VCC - 5V
@@ -10,18 +12,19 @@
 
 #include <Arduino.h>
 
-#define PC_BAUDRATE 9600
+#define COMPUTER_BAUDRATE 9600
 #define GPS_BAUDRATE 9600
 
 void setup()
 {
-    Serial.begin(PC_BAUDRATE);
+    Serial.begin(COMPUTER_BAUDRATE);
     Serial3.begin(GPS_BAUDRATE);
 }
 
-// If there is a data from the receiver, read it and send to the PC or vice versa.
 void loop()
 {
+    // If there is data from the receiver, read it and send it to the computer
+    // or vice versa.
     if (Serial3.available())
     {
         Serial.write(Serial3.read());
