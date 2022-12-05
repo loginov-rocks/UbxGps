@@ -1,10 +1,8 @@
 /**
- * The sketch parses UBX messages from u-blox NEO-7M and outputs ready GPS data
- * to a serial port in a CSV format.
+ * The sketch parses UBX messages from u-blox NEO-7M and outputs ready GPS data to a serial port in a CSV format.
  *
- * Please be aware because Arduino Uno is used and it only has one UART, we
- * deal with software implementation for serial communication, which is
- * unstable. Use the hardware serial if available!
+ * Please be aware because Arduino Uno is used and it only has one UART, we deal with software implementation for
+ * serial communication, which is unstable. Use the hardware serial if available!
  *
  * u-blox NEO-7M - Arduino Uno
  * VCC - 5V

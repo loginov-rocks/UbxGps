@@ -1,7 +1,6 @@
 /**
- * The sketch establishes serial communication between the terminal on the
- * computer and the UART device with Arduino Mega as a mediator. With u-blox
- * NEO-7M in this case.
+ * The sketch establishes serial communication between the terminal on the computer and the UART device with Arduino
+ * Mega as a mediator. With u-blox NEO-7M in this case.
  *
  * u-blox NEO-7M - Arduino Mega
  * VCC - 5V
@@ -23,8 +22,7 @@ void setup()
 
 void loop()
 {
-    // If there is data from the receiver, read it and send it to the computer
-    // or vice versa.
+    // If there is data from the receiver, read it and send it to the computer or vice versa.
     if (Serial3.available())
     {
         Serial.write(Serial3.read());

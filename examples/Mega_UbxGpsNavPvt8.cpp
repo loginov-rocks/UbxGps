@@ -1,7 +1,7 @@
 /**
- * The sketch parses UBX messages from u-blox NEO-7M and outputs ready GPS data to a serial port in a CSV format.
+ * The sketch parses UBX messages from u-blox NEO-8M and outputs ready GPS data to a serial port in a CSV format.
  *
- * u-blox NEO-7M - Arduino Mega
+ * u-blox NEO-8M - Arduino Mega
  * VCC - 5V
  * RX - TX3
  * TX - RX3
@@ -9,7 +9,7 @@
  */
 
 #include <Arduino.h>
-#include <UbxGpsNavPvt.h>
+#include <UbxGpsNavPvt8.h>
 
 #define COMPUTER_BAUDRATE 115200
 #define GPS_BAUDRATE 115200
@@ -17,7 +17,7 @@
 #define DATETIME_FORMAT "%04d.%02d.%02d %02d:%02d:%02d"
 #define DATETIME_LENGTH 20
 
-UbxGpsNavPvt<HardwareSerial> gps(Serial3);
+UbxGpsNavPvt8<HardwareSerial> gps(Serial3);
 
 char datetime[DATETIME_LENGTH];
 
@@ -43,7 +43,7 @@ void loop()
         Serial.print(',');
         Serial.print(gps.gSpeed * 0.0036, 5);
         Serial.print(',');
-        Serial.print(gps.heading / 100000.0, 5);
+        Serial.print(gps.headMot / 100000.0, 5);
         Serial.print(',');
         Serial.print(gps.fixType);
         Serial.print(',');

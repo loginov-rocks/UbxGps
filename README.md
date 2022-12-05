@@ -29,6 +29,10 @@ is designed to make new types as easy as it can be.
 fixType, flags, reserved1, numSV, lon, lat, height, hMSL, hAcc, vAcc, velN, velE, velD, gSpeed, heading, sAcc,
 headingAcc, pDOP, reserved2, reserved3.
 
+### UbxGpsNavPvt8.h
+
+Similar to [UbxGpsNavPvt.h](#ubxgpsnavpvth), but for u-blox NEO-8M.
+
 ### UbxGpsNavSol.h
 
 *NAV-SOL (Navigation Solution Information):* iTOW, fTOW, week, gpsFix, flags, ecefX, ecefY, ecefZ, pAcc, ecefVX, ecefVY,
@@ -183,9 +187,11 @@ More details about u-blox GPS module configuration are in ***Receiver Descriptio
 
 ## Compatible GPS modules
 
-* NEO-7M
+* NEO-7M - tested
+* NEO-8M - tested
 * Other u-blox GPS modules supporting UBX protocol
-* *Please notice (create an issue) if it works with your GPS module*
+
+Please create an issue to report if you tested **UbxGps** with other u-blox GPS modules. Thank you!
 
 ## Reference
 

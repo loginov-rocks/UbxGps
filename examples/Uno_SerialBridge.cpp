@@ -1,11 +1,9 @@
 /**
- * The sketch establishes serial communication between the terminal on the
- * computer and the UART device with Arduino Uno as a mediator. With u-blox
- * NEO-7M in this case.
+ * The sketch establishes serial communication between the terminal on the computer and the UART device with Arduino
+ * Uno as a mediator. With u-blox NEO-7M in this case.
  *
- * Please be aware because Arduino Uno is used and it only has one UART, we
- * deal with software implementation for serial communication, which is
- * unstable. Use the hardware serial if available!
+ * Please be aware because Arduino Uno is used and it only has one UART, we deal with software implementation for
+ * serial communication, which is unstable. Use the hardware serial if available!
  *
  * u-blox NEO-7M - Arduino Uno
  * VCC - 5V
@@ -32,8 +30,7 @@ void setup()
 
 void loop()
 {
-    // If there is data from the receiver, read it and send it to the computer
-    // or vice versa.
+    // If there is data from the receiver, read it and send it to the computer or vice versa.
     if (ss.available())
     {
         Serial.write(ss.read());
