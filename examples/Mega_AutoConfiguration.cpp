@@ -38,74 +38,34 @@ const long gpsPossibleBaudrates[] = {
     // 4800,
 };
 
-void setup()
+// Print a packet to the computer serial port in a hexadecimal form.
+void printPacket(byte *packet, byte len)
 {
-    COMPUTER_SERIAL.begin(COMPUTER_BAUDRATE);
-    COMPUTER_SERIAL.println("Starting auto-configuration...");
+    char temp[3];
 
-    // Restore the default GPS receiver configuration.
-    for (byte i = 0; i < sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates); i++)
+    for (byte i = 0; i < len; i++)
     {
-        COMPUTER_SERIAL.print("Trying to restore defaults at ");
-        COMPUTER_SERIAL.print(gpsPossibleBaudrates[i]);
-        COMPUTER_SERIAL.println(" baudrate...");
+        sprintf(temp, "%.2X", packet[i]);
+        COMPUTER_SERIAL.print(temp);
 
-        if (i != 0)
+        if (i != len - 1)
         {
-            delay(100); // Little delay before the flush.
-            GPS_SERIAL.flush();
+            COMPUTER_SERIAL.print(' ');
         }
-
-        GPS_SERIAL.begin(gpsPossibleBaudrates[i]);
-        restoreDefaults();
     }
 
-    // Switch the GPS receiver serial configuration to the default baudrate.
-    if (gpsPossibleBaudrates[sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
+    COMPUTER_SERIAL.println();
+}
+
+// Send a packet to the GPS receiver.
+void sendPacket(byte *packet, byte len)
+{
+    for (byte i = 0; i < len; i++)
     {
-        COMPUTER_SERIAL.print("Switching to the default baudrate which is ");
-        COMPUTER_SERIAL.print(GPS_DEFAULT_BAUDRATE);
-        COMPUTER_SERIAL.println("...");
-
-        delay(100); // Little delay before the flush.
-        GPS_SERIAL.flush();
-        GPS_SERIAL.begin(GPS_DEFAULT_BAUDRATE);
+        GPS_SERIAL.write(packet[i]);
     }
 
-    // Disable NMEA messages by sending appropriate packets.
-    COMPUTER_SERIAL.println("Disabling NMEA messages...");
-    disableNmea();
-
-    // Switch the GPS receiver serial configuration to the target baudrate.
-    if (GPS_TARGET_BAUDRATE != GPS_DEFAULT_BAUDRATE)
-    {
-        COMPUTER_SERIAL.print("Switching to the target baudrate which is ");
-        COMPUTER_SERIAL.print(GPS_TARGET_BAUDRATE);
-        COMPUTER_SERIAL.println("...");
-
-        changeBaudrate();
-
-        delay(100); // Little delay before the flush.
-        GPS_SERIAL.flush();
-        GPS_SERIAL.begin(GPS_TARGET_BAUDRATE);
-    }
-
-    // Change receiving frequency to 100 ms.
-    COMPUTER_SERIAL.println("Changing receiving frequency to 100 ms...");
-    changeFrequency();
-
-    // Disable unnecessary channels like SBAS or QZSS.
-    COMPUTER_SERIAL.println("Disabling unnecessary channels...");
-    disableUnnecessaryChannels();
-
-    // Enable NAV-PVT messages.
-    COMPUTER_SERIAL.println("Enabling NAV-PVT messages...");
-    enableNavPvt();
-
-    COMPUTER_SERIAL.println("Auto-configuration is complete!");
-
-    delay(100); // Little delay before the flush.
-    GPS_SERIAL.flush();
+    printPacket(packet, len);
 }
 
 // Send a packet to the GPS receiver to restore the default configuration.
@@ -317,34 +277,74 @@ void enableNavPvt()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the GPS receiver.
-void sendPacket(byte *packet, byte len)
+void setup()
 {
-    for (byte i = 0; i < len; i++)
+    COMPUTER_SERIAL.begin(COMPUTER_BAUDRATE);
+    COMPUTER_SERIAL.println("Starting auto-configuration...");
+
+    // Restore the default GPS receiver configuration.
+    for (byte i = 0; i < sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates); i++)
     {
-        GPS_SERIAL.write(packet[i]);
-    }
+        COMPUTER_SERIAL.print("Trying to restore defaults at ");
+        COMPUTER_SERIAL.print(gpsPossibleBaudrates[i]);
+        COMPUTER_SERIAL.println(" baudrate...");
 
-    printPacket(packet, len);
-}
-
-// Print a packet to the computer serial port in a hexadecimal form.
-void printPacket(byte *packet, byte len)
-{
-    char temp[3];
-
-    for (byte i = 0; i < len; i++)
-    {
-        sprintf(temp, "%.2X", packet[i]);
-        COMPUTER_SERIAL.print(temp);
-
-        if (i != len - 1)
+        if (i != 0)
         {
-            COMPUTER_SERIAL.print(' ');
+            delay(100); // Little delay before the flush.
+            GPS_SERIAL.flush();
         }
+
+        GPS_SERIAL.begin(gpsPossibleBaudrates[i]);
+        restoreDefaults();
     }
 
-    COMPUTER_SERIAL.println();
+    // Switch the GPS receiver serial configuration to the default baudrate.
+    if (gpsPossibleBaudrates[sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
+    {
+        COMPUTER_SERIAL.print("Switching to the default baudrate which is ");
+        COMPUTER_SERIAL.print(GPS_DEFAULT_BAUDRATE);
+        COMPUTER_SERIAL.println("...");
+
+        delay(100); // Little delay before the flush.
+        GPS_SERIAL.flush();
+        GPS_SERIAL.begin(GPS_DEFAULT_BAUDRATE);
+    }
+
+    // Disable NMEA messages by sending appropriate packets.
+    COMPUTER_SERIAL.println("Disabling NMEA messages...");
+    disableNmea();
+
+    // Switch the GPS receiver serial configuration to the target baudrate.
+    if (GPS_TARGET_BAUDRATE != GPS_DEFAULT_BAUDRATE)
+    {
+        COMPUTER_SERIAL.print("Switching to the target baudrate which is ");
+        COMPUTER_SERIAL.print(GPS_TARGET_BAUDRATE);
+        COMPUTER_SERIAL.println("...");
+
+        changeBaudrate();
+
+        delay(100); // Little delay before the flush.
+        GPS_SERIAL.flush();
+        GPS_SERIAL.begin(GPS_TARGET_BAUDRATE);
+    }
+
+    // Change receiving frequency to 100 ms.
+    COMPUTER_SERIAL.println("Changing receiving frequency to 100 ms...");
+    changeFrequency();
+
+    // Disable unnecessary channels like SBAS or QZSS.
+    COMPUTER_SERIAL.println("Disabling unnecessary channels...");
+    disableUnnecessaryChannels();
+
+    // Enable NAV-PVT messages.
+    COMPUTER_SERIAL.println("Enabling NAV-PVT messages...");
+    enableNavPvt();
+
+    COMPUTER_SERIAL.println("Auto-configuration is complete!");
+
+    delay(100); // Little delay before the flush.
+    GPS_SERIAL.flush();
 }
 
 void loop()
