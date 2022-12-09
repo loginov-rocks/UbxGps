@@ -22,7 +22,7 @@ void setup()
 
 void loop()
 {
-    // If there is data from the receiver, read it and send it to the computer or vice versa.
+    // If there is data from the GPS receiver, read it and send it to the computer or vice versa.
     if (Serial3.available())
     {
         Serial.write(Serial3.read());

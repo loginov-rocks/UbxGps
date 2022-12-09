@@ -1,7 +1,7 @@
 /**
- * The sketch restores the receiver default configuration and configure it to get NAV-PVT messages with 100 ms
- * frequency and 115200 baudrate. After the auto-configuration, it transmits the data from the receiver to the PC and
- * vice versa.
+ * The sketch restores the GPS receiver default configuration and configures it to get NAV-PVT messages with 100 ms
+ * frequency and 115200 baudrate. After the auto-configuration, it transmits the data from the GPS receiver to the
+ * computer and vice versa.
  *
  * u-blox NEO-7M - Arduino Mega
  * VCC - 5V
@@ -12,102 +12,103 @@
 
 #include <Arduino.h>
 
-#define PC_SERIAL Serial
-#define PC_BAUDRATE 115200L
+#define COMPUTER_SERIAL Serial
+#define COMPUTER_BAUDRATE 115200
 #define GPS_SERIAL Serial3
 
-// Default baudrate is determined by the receiver manufacturer.
-#define GPS_DEFAULT_BAUDRATE 9600L
+// The default baudrate is determined by the GPS receiver manufacturer.
+#define GPS_DEFAULT_BAUDRATE 9600
 
-// Wanted buadrate at the moment can be 9600L (not changed after defaults) or 115200L (changed by the
-// `changeBaudrate()` function with a prepared message).
-#define GPS_WANTED_BAUDRATE 115200L
+// The target buadrate at the moment can be 9600 (not changed after defaults) or 115200 (changed by the
+// `changeBaudrate()` function with a special message).
+#define GPS_TARGET_BAUDRATE 115200
 
-// Array of possible baudrates that can be used by the receiver, sorted descending to prevent excess Serial flush/begin
-// after restoring defaults. You can uncomment values that can be used by your receiver before the auto-configuration.
-const long possibleBaudrates[] = {
-    //921600L,
-    //460800L,
-    //230400L,
-    115200L,
-    //57600L,
-    //38400L,
-    //19200L,
-    9600L,
-    //4800L,
+// An array of possible baudrates that can be used by the GPS receiver, sorted descending to prevent excess Serial
+// flush/begin after restoring defaults. You can uncomment values that can be used by your GPS receiver before the
+// auto-configuration.
+const long gpsPossibleBaudrates[] = {
+    // 921600,
+    // 460800,
+    // 230400,
+    115200,
+    // 57600,
+    // 38400,
+    // 19200,
+    9600,
+    // 4800,
 };
 
 void setup()
 {
-    PC_SERIAL.begin(PC_BAUDRATE);
-    PC_SERIAL.println("Starting auto-configuration...");
+    COMPUTER_SERIAL.begin(COMPUTER_BAUDRATE);
+    COMPUTER_SERIAL.println("Starting auto-configuration...");
 
-    // Restore the receiver default configuration.
-    for (byte i = 0; i < sizeof(possibleBaudrates) / sizeof(*possibleBaudrates); i++)
+    // Restore the default GPS receiver configuration.
+    for (byte i = 0; i < sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates); i++)
     {
-        PC_SERIAL.print("Trying to restore defaults at ");
-        PC_SERIAL.print(possibleBaudrates[i]);
-        PC_SERIAL.println(" baudrate...");
+        COMPUTER_SERIAL.print("Trying to restore defaults at ");
+        COMPUTER_SERIAL.print(gpsPossibleBaudrates[i]);
+        COMPUTER_SERIAL.println(" baudrate...");
 
         if (i != 0)
         {
-            delay(100); // Little delay before flushing.
+            delay(100); // Little delay before the flush.
             GPS_SERIAL.flush();
         }
 
-        GPS_SERIAL.begin(possibleBaudrates[i]);
+        GPS_SERIAL.begin(gpsPossibleBaudrates[i]);
         restoreDefaults();
     }
 
-    // Switch the receiver serial to the default baudrate.
-    if (possibleBaudrates[sizeof(possibleBaudrates) / sizeof(*possibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
+    // Switch the GPS receiver serial configuration to the default baudrate.
+    if (gpsPossibleBaudrates[sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
     {
-        PC_SERIAL.print("Switching to the default baudrate which is ");
-        PC_SERIAL.print(GPS_DEFAULT_BAUDRATE);
-        PC_SERIAL.println("...");
+        COMPUTER_SERIAL.print("Switching to the default baudrate which is ");
+        COMPUTER_SERIAL.print(GPS_DEFAULT_BAUDRATE);
+        COMPUTER_SERIAL.println("...");
 
-        delay(100); // Little delay before flushing.
+        delay(100); // Little delay before the flush.
         GPS_SERIAL.flush();
         GPS_SERIAL.begin(GPS_DEFAULT_BAUDRATE);
     }
 
     // Disable NMEA messages by sending appropriate packets.
-    PC_SERIAL.println("Disabling NMEA messages...");
+    COMPUTER_SERIAL.println("Disabling NMEA messages...");
     disableNmea();
 
-    // Switch the receiver serial to the wanted baudrate.
-    if (GPS_WANTED_BAUDRATE != GPS_DEFAULT_BAUDRATE)
+    // Switch the GPS receiver serial configuration to the target baudrate.
+    if (GPS_TARGET_BAUDRATE != GPS_DEFAULT_BAUDRATE)
     {
-        PC_SERIAL.print("Switching receiver to the wanted baudrate which is ");
-        PC_SERIAL.print(GPS_WANTED_BAUDRATE);
-        PC_SERIAL.println("...");
+        COMPUTER_SERIAL.print("Switching to the target baudrate which is ");
+        COMPUTER_SERIAL.print(GPS_TARGET_BAUDRATE);
+        COMPUTER_SERIAL.println("...");
 
         changeBaudrate();
 
-        delay(100); // Little delay before flushing.
+        delay(100); // Little delay before the flush.
         GPS_SERIAL.flush();
-        GPS_SERIAL.begin(GPS_WANTED_BAUDRATE);
+        GPS_SERIAL.begin(GPS_TARGET_BAUDRATE);
     }
 
-    // Increase frequency to 100 ms.
-    PC_SERIAL.println("Changing receiving frequency to 100 ms...");
+    // Change receiving frequency to 100 ms.
+    COMPUTER_SERIAL.println("Changing receiving frequency to 100 ms...");
     changeFrequency();
 
     // Disable unnecessary channels like SBAS or QZSS.
-    PC_SERIAL.println("Disabling unnecessary channels...");
+    COMPUTER_SERIAL.println("Disabling unnecessary channels...");
     disableUnnecessaryChannels();
 
     // Enable NAV-PVT messages.
-    PC_SERIAL.println("Enabling NAV-PVT messages...");
+    COMPUTER_SERIAL.println("Enabling NAV-PVT messages...");
     enableNavPvt();
 
-    PC_SERIAL.println("Auto-configuration is complete!");
+    COMPUTER_SERIAL.println("Auto-configuration is complete!");
 
-    delay(100); // Little delay before flushing.
+    delay(100); // Little delay before the flush.
     GPS_SERIAL.flush();
 }
 
-// Send a packet to the receiver to restore default configuration.
+// Send a packet to the GPS receiver to restore the default configuration.
 void restoreDefaults()
 {
     // CFG-CFG packet.
@@ -138,10 +139,10 @@ void restoreDefaults()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a set of packets to the receiver to disable NMEA messages.
+// Send a set of packets to the GPS receiver to disable NMEA messages.
 void disableNmea()
 {
-    // Array of two bytes for CFG-MSG packets payload.
+    // An array of two bytes for CFG-MSG packets payload.
     byte messages[][2] = {
         {0xF0, 0x0A},
         {0xF0, 0x09},
@@ -175,13 +176,13 @@ void disableNmea()
         0x00, // length
         0x00, // payload (first byte from messages array element)
         0x00, // payload (second byte from messages array element)
-        0x00, // payload (not changed in the case)
+        0x00, // payload (not changed in this case)
         0x00, // CK_A
         0x00, // CK_B
     };
     byte packetSize = sizeof(packet);
 
-    // Offset to the place where payload starts.
+    // Offset to a place where payload starts.
     byte payloadOffset = 6;
 
     // Iterate over the messages array.
@@ -193,7 +194,7 @@ void disableNmea()
             packet[payloadOffset + j] = messages[i][j];
         }
 
-        // Set checksum bytes to the null.
+        // Set checksum bytes to null.
         packet[packetSize - 2] = 0x00;
         packet[packetSize - 1] = 0x00;
 
@@ -208,7 +209,7 @@ void disableNmea()
     }
 }
 
-// Send a packet to the receiver to change baudrate to 115200.
+// Send a packet to the GPS receiver to change the baudrate to 115200.
 void changeBaudrate()
 {
     // CFG-PRT packet.
@@ -246,7 +247,7 @@ void changeBaudrate()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the receiver to change frequency to 100 ms.
+// Send a packet to the GPS receiver to change the frequency to 100 ms.
 void changeFrequency()
 {
     // CFG-RATE packet.
@@ -270,7 +271,7 @@ void changeFrequency()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the receiver to disable unnecessary channels.
+// Send a packet to the GPS receiver to disable unnecessary channels.
 void disableUnnecessaryChannels()
 {
     // CFG-GNSS packet.
@@ -295,7 +296,7 @@ void disableUnnecessaryChannels()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send a packet to the receiver to enable NAV-PVT messages.
+// Send a packet to the GPS receiver to enable NAV-PVT messages.
 void enableNavPvt()
 {
     // CFG-MSG packet.
@@ -316,7 +317,7 @@ void enableNavPvt()
     sendPacket(packet, sizeof(packet));
 }
 
-// Send the packet specified to the receiver.
+// Send a packet to the GPS receiver.
 void sendPacket(byte *packet, byte len)
 {
     for (byte i = 0; i < len; i++)
@@ -327,7 +328,7 @@ void sendPacket(byte *packet, byte len)
     printPacket(packet, len);
 }
 
-// Print the packet specified to the PC serial in a hexadecimal form.
+// Print a packet to the computer serial port in a hexadecimal form.
 void printPacket(byte *packet, byte len)
 {
     char temp[3];
@@ -335,27 +336,27 @@ void printPacket(byte *packet, byte len)
     for (byte i = 0; i < len; i++)
     {
         sprintf(temp, "%.2X", packet[i]);
-        PC_SERIAL.print(temp);
+        COMPUTER_SERIAL.print(temp);
 
         if (i != len - 1)
         {
-            PC_SERIAL.print(' ');
+            COMPUTER_SERIAL.print(' ');
         }
     }
 
-    PC_SERIAL.println();
+    COMPUTER_SERIAL.println();
 }
 
-// If there is a data from the receiver, read it and send to the PC or vice versa.
 void loop()
 {
+    // If there is data from the GPS receiver, read it and send it to the computer or vice versa.
     if (GPS_SERIAL.available())
     {
-        PC_SERIAL.write(GPS_SERIAL.read());
+        COMPUTER_SERIAL.write(GPS_SERIAL.read());
     }
 
-    if (PC_SERIAL.available())
+    if (COMPUTER_SERIAL.available())
     {
-        GPS_SERIAL.write(PC_SERIAL.read());
+        GPS_SERIAL.write(COMPUTER_SERIAL.read());
     }
 }

@@ -10,6 +10,7 @@ UbxGps	KEYWORD1
 UbxGpsNavPosecef	KEYWORD1
 UbxGpsNavPosllh	KEYWORD1
 UbxGpsNavPvt	KEYWORD1
+UbxGpsNavPvt8	KEYWORD1
 UbxGpsNavSol	KEYWORD1
 
 #######################################

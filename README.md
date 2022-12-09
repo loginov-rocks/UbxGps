@@ -196,4 +196,4 @@ Please create an issue to report if you tested **UbxGps** with other u-blox GPS 
 ## Reference
 
 * [u-blox Website](https://www.u-blox.com)
-* [u-center Download page](https://www.u-blox.com/en/product/u-center)
+* [u-center Download page](https://www.u-blox.com/en/product/u-center) (Windows only)
