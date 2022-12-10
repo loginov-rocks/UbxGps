@@ -1,5 +1,8 @@
 # UbxGps
 
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/loginov-rocks/library/UbxGps.svg)](https://registry.platformio.org/libraries/loginov-rocks/UbxGps)
+[![Arduino Lint](https://github.com/loginov-rocks/UbxGps/actions/workflows/arduino-lint.yml/badge.svg)](https://github.com/loginov-rocks/UbxGps/actions/workflows/arduino-lint.yml)
+
 **This Arduino library was developed for the fastest and simplest communication with u-blox GPS modules**, which
 support proprietary UBX protocol that is binary and therefore more compact than common NMEA. Main idea was to achieve real 10 Hz from NEO-7M and it was done. Huge thanks to **iforce2d** for a [tutorial video](https://youtu.be/TwhCX0c8Xe0) whose
 code is laid in the basics of the library.
