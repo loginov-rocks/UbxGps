@@ -6,6 +6,14 @@
 // The default baudrate is determined by the GPS receiver manufacturer.
 #define GPS_DEFAULT_BAUDRATE 9600
 
+enum class UbxGpsConfigMessage
+{
+    NavPosecef = 0x01,
+    NavPossllh = 0x02,
+    NavPvt = 0x07,
+    NavSol = 0x06,
+};
+
 // An array of possible baudrates that can be used by the GPS receiver, sorted descending to prevent excess Serial
 // flush/begin after restoring defaults. You can uncomment values that can be used by your GPS receiver before the
 // auto-configuration.
@@ -27,7 +35,10 @@ class UbxGpsConfig
 private:
     GpsSerial &gpsSerial;
     LogSerial &logSerial;
-    unsigned long targetBaudrate;
+
+    unsigned long baudrate;
+    UbxGpsConfigMessage message;
+    unsigned short rate;
 
     // Print a packet to the log serial port in a hexadecimal form.
     void printPacket(byte *packet, byte len)
@@ -252,15 +263,16 @@ private:
     {
         // CFG-MSG packet.
         byte packet[] = {
-            0xB5, // sync char 1
-            0x62, // sync char 2
-            0x06, // class
-            0x01, // id
-            0x03, // length
-            0x00, // length
-            0x01, // payload
-            0x07, // payload
-            0x01, // payload
+            0xB5,          // sync char 1
+            0x62,          // sync char 2
+            0x06,          // class
+            0x01,          // id
+            0x03,          // length
+            0x00,          // length
+            0x01,          // payload
+            (byte)message, // payload
+            0x01,          // payload
+            // TODO: Update checksum to fit message other than 0x07.
             0x13, // CK_A
             0x51, // CK_B
         };
@@ -277,9 +289,19 @@ public:
 
     // The target buadrate at the moment can be 9600 (not changed after defaults) or 115200 (changed by the
     // `changeBaudrate()` function with a special message).
-    void setTargetBaudrate(unsigned long baudrate)
+    void setBaudrate(unsigned long _baudrate)
     {
-        targetBaudrate = baudrate;
+        baudrate = _baudrate;
+    }
+
+    void setMessage(UbxGpsConfigMessage _message)
+    {
+        message = _message;
+    }
+
+    void setRate(unsigned short _rate)
+    {
+        rate = _rate;
     }
 
     void configure()
@@ -320,22 +342,25 @@ public:
         disableNmea();
 
         // Switch the GPS receiver serial configuration to the target baudrate.
-        if (targetBaudrate != GPS_DEFAULT_BAUDRATE)
+        if (baudrate != GPS_DEFAULT_BAUDRATE)
         {
             logSerial.print("Switching to the target baudrate which is ");
-            logSerial.print(targetBaudrate);
+            logSerial.print(baudrate);
             logSerial.println("...");
 
             changeBaudrate();
 
             delay(100); // Little delay before the flush.
             gpsSerial.flush();
-            gpsSerial.begin(targetBaudrate);
+            gpsSerial.begin(baudrate);
         }
 
-        // Change receiving frequency to 100 ms.
-        logSerial.println("Changing receiving frequency to 100 ms...");
-        changeFrequency();
+        if (rate == 100)
+        {
+            // Change receiving frequency to 100 ms.
+            logSerial.println("Changing receiving frequency to 100 ms...");
+            changeFrequency();
+        }
 
         // Disable unnecessary channels like SBAS or QZSS.
         logSerial.println("Disabling unnecessary channels...");

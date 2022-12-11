@@ -21,7 +21,9 @@ void setup()
     Serial.begin(COMPUTER_BAUDRATE);
 
     UbxGpsConfig<HardwareSerial, HardwareSerial> *ubxGpsConfig = new UbxGpsConfig<HardwareSerial, HardwareSerial>(Serial3, Serial);
-    ubxGpsConfig->setTargetBaudrate(GPS_BAUDRATE);
+    ubxGpsConfig->setBaudrate(GPS_BAUDRATE);
+    ubxGpsConfig->setMessage(UbxGpsConfigMessage::NavPvt);
+    ubxGpsConfig->setRate(100);
     ubxGpsConfig->configure();
     delete ubxGpsConfig;
 
