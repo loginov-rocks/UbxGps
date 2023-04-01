@@ -39,6 +39,9 @@ private:
     unsigned long baudrate;
     UbxGpsConfigMessage message;
     unsigned short rate;
+    bool customPins = false;
+    uint16_t tx;
+    uint16_t rx;
 
     // Print a packet to the log serial port in a hexadecimal form.
     void printPacket(byte *packet, byte len)
@@ -294,6 +297,13 @@ public:
         baudrate = _baudrate;
     }
 
+    void setCustomPins(uint16_t _tx, uint16_t _rx)
+    {
+        customPins = true;
+        tx = _tx;
+        rx = _rx;
+    }
+
     void setMessage(UbxGpsConfigMessage _message)
     {
         message = _message;
@@ -302,6 +312,40 @@ public:
     void setRate(unsigned short _rate)
     {
         rate = _rate;
+    }
+
+    long findCurrentBaudrate(int recpin)
+    {
+        long baud, rate = 10000, x;
+        for (int i = 0; i < 10; i++)
+        {
+            x = pulseIn(recpin, LOW); // measure the next zero bit width
+            rate = x < rate ? x : rate;
+        }
+
+        if (rate < 12)
+            baud = 115200;
+        else if (rate < 20)
+            baud = 57600;
+        else if (rate < 29)
+            baud = 38400;
+        else if (rate < 40)
+            baud = 28800;
+        else if (rate < 60)
+            baud = 19200;
+        else if (rate < 80)
+            baud = 14400;
+        else if (rate < 150)
+            baud = 9600;
+        else if (rate < 300)
+            baud = 4800;
+        else if (rate < 600)
+            baud = 2400;
+        else if (rate < 1200)
+            baud = 1200;
+        else
+            baud = 0;
+        return baud;
     }
 
     void configure()
@@ -321,10 +365,22 @@ public:
                 gpsSerial.flush();
             }
 
-            gpsSerial.begin(gpsPossibleBaudrates[i]);
+            if (customPins)
+            {
+                gpsSerial.begin(gpsPossibleBaudrates[i], SERIAL_8N1, tx, rx);
+            }
+            else
+            {
+                gpsSerial.begin(gpsPossibleBaudrates[i]);
+            }
+
             restoreDefaults();
         }
 
+        logSerial.print("Current Baudrate determined at ");
+        logSerial.print(findCurrentBaudrate(rx));
+        logSerial.println(" bps...");
+        
         // Switch the GPS receiver serial configuration to the default baudrate.
         if (gpsPossibleBaudrates[sizeof(gpsPossibleBaudrates) / sizeof(*gpsPossibleBaudrates) - 1] != GPS_DEFAULT_BAUDRATE)
         {
@@ -334,7 +390,16 @@ public:
 
             delay(100); // Little delay before the flush.
             gpsSerial.flush();
-            gpsSerial.begin(GPS_DEFAULT_BAUDRATE);
+
+            if (customPins)
+            {
+                gpsSerial.begin(GPS_DEFAULT_BAUDRATE, SERIAL_8N1, tx, rx);
+            }
+            else
+            {
+                gpsSerial.begin(GPS_DEFAULT_BAUDRATE);
+            }
+
         }
 
         // Disable NMEA messages by sending appropriate packets.
@@ -352,7 +417,14 @@ public:
 
             delay(100); // Little delay before the flush.
             gpsSerial.flush();
-            gpsSerial.begin(baudrate);
+            if (customPins)
+            {
+                gpsSerial.begin(baudrate, SERIAL_8N1, tx, rx);
+            }
+            else
+            {
+                gpsSerial.begin(baudrate);
+            }
         }
 
         if (rate == 100)
