@@ -60,6 +60,11 @@ public:
     serial.begin(baudrate);
   }
 
+  void begin(unsigned long baudrate, long speed, uint16_t tx, uint16_t rx)
+  {
+    serial.begin(baudrate, speed, tx, rx);
+  }
+
   boolean ready()
   {
     unsigned char p = carriagePosition;
@@ -67,6 +72,7 @@ public:
     while (available())
     {
       byte c = read();
+      // Serial.print(c);Serial.print(" ");
 
       // Carriage is at the first or the second sync byte, should be equals.
       if (p < 2)
@@ -74,6 +80,7 @@ public:
         if (c == UBXGPS_HEADER[p])
         {
           p++;
+          Serial.println("Got header");
         }
         // Reset if not.
         else
@@ -98,12 +105,14 @@ public:
         // not read.
         if (p == (size + 2))
         {
+          Serial.println(p);
           calculateChecksum();
         }
         // Carriage is at the second checksum byte, but only the first byte of checksum read, check if it equals to
         // ours.
         else if (p == (size + 3))
-        {
+        { 
+          Serial.println(p);
           // Reset if not.
           if (c != checksum[0])
           {
