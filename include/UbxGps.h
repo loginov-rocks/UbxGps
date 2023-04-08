@@ -11,7 +11,7 @@ class UbxGps
 private:
   // Class properties.
   T &serial;
-  unsigned char offsetClassProperties = 8;
+  unsigned char offsetClassProperties = 12;
   unsigned char offsetHeaders = 4;
   unsigned char size;
   unsigned char carriagePosition;
