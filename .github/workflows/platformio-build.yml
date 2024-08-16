@@ -14,5 +14,5 @@ jobs:
     name: PlatformIO Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: karniv00l/platformio-run-action@v1
